@@ -5,5 +5,5 @@ import io.moura.test.challenge.ctw.data.source.network.model.NetworkHeadLine
 import kotlinx.coroutines.flow.Flow
 
 interface NewsDataSource {
-    fun loadHeadLines(): Flow<DataResponse<List<NetworkHeadLine>>>
+    suspend fun loadHeadLines(): Flow<DataResponse<List<NetworkHeadLine>>>
 }

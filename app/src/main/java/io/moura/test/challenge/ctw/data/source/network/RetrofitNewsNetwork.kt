@@ -14,7 +14,7 @@ class RetrofitNewsNetwork @Inject constructor(
     private val newsApi: NewsApi,
     private val localeUtils: LocaleUtils
 ) : NewsDataSource {
-    override fun loadHeadLines(): Flow<DataResponse<List<NetworkHeadLine>>> = flow {
+    override suspend fun loadHeadLines(): Flow<DataResponse<List<NetworkHeadLine>>> = flow {
         apiRequestFlow {
             newsApi.getHeadLinesFromCountry(
                 localeUtils.getUserLocale() ?: localeUtils.DEFAULT_LOCALE

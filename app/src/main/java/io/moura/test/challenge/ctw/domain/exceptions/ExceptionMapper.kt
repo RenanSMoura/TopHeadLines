@@ -18,7 +18,6 @@ object ExceptionMapper {
         }
     }
 
-
     private fun mapApiException(code: Int?): ProjectExceptions {
         return when (code) {
             400 -> BadRequest
