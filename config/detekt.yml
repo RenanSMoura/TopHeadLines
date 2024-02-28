@@ -1,0 +1,49 @@
+config:
+  validation: true
+  warningsAsErrors: false
+  excludes: ''
+
+complexity:
+  TooManyFunctions:
+    thresholdInFiles: 30
+    thresholdInObjects: 30
+    thresholdInClasses: 30
+    thresholdInEnums: 30
+    thresholdInInterfaces: 30
+  LongParameterList:
+    functionThreshold: 100
+  LongMethod:
+    active: false
+
+style:
+  MagicNumber:
+    active: false
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated: [ 'Preview' ]
+  ReturnCount:
+    active: false
+
+naming:
+  FunctionNaming:
+    active: true
+    functionPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ignoreAnnotated: [ 'Composable' ]
+  TopLevelPropertyNaming:
+    active: true
+    constantPattern: '[A-Z][A-Za-z0-9_]*'
+  VariableNaming:
+    active: false
+
+formatting:
+  NoEmptyFirstLineInMethodBlock:
+    active: false
+    autoCorrect: false
+
+output-reports:
+  active: true
+  exclude:
+    - 'TxtOutputReport'
+    - 'XmlOutputReport'
+    - 'SarifOutputReport'
+    - 'MdOutputReport'
