@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 
 class FakeRetrofitNewsNetwork : NewsDataSource {
     private val headLinesFlow = MutableSharedFlow<DataResponse<List<NetworkHeadLine>>>()
-    override fun loadHeadLines(): Flow<DataResponse<List<NetworkHeadLine>>> = headLinesFlow
-    suspend fun emit(response: DataResponse<List<NetworkHeadLine>>) = headLinesFlow.tryEmit(response)
+    override suspend fun loadHeadLines() = headLinesFlow
+    suspend fun emit(response: DataResponse<List<NetworkHeadLine>>) = headLinesFlow.emit(response)
 }

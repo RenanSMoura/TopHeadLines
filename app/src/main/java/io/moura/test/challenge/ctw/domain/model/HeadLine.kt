@@ -1,6 +1,5 @@
 package io.moura.test.challenge.ctw.domain.model
 
-
 import java.util.Date
 
 data class HeadLine(
