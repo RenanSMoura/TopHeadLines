@@ -55,6 +55,12 @@ android {
             excludes.add("META-INF/gradle/incremental.annotation.processors")
         }
     }
+    sourceSets {
+        named("test") {
+            java.srcDirs("src/debug/java")
+            resources.srcDirs("src/debug/resources")
+        }
+    }
 }
 
 detekt {

@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import io.moura.test.challenge.ctw.BuildConfig
 import io.moura.test.challenge.ctw.data.source.network.api.NewsApi
 import io.moura.test.challenge.ctw.data.source.network.api.interceptors.AuthInterceptor
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -31,13 +32,13 @@ object ApiModule {
 
     @Singleton
     @Provides
-    private fun provideAuthInterceptor(): AuthInterceptor = AuthInterceptor()
+    private fun provideAuthInterceptor(): Interceptor = AuthInterceptor()
 
     @Singleton
     @Provides
     fun providesHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
-        authInterceptor: AuthInterceptor
+        authInterceptor: Interceptor = provideAuthInterceptor()
     ): OkHttpClient =
         OkHttpClient
             .Builder()

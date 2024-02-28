@@ -3,6 +3,7 @@ package io.moura.test.challenge.ctw.data.source.network
 import io.moura.test.challenge.ctw.data.source.network.api.ApiResponse
 import io.moura.test.challenge.ctw.data.source.network.api.NewsApi
 import io.moura.test.challenge.ctw.data.source.network.api.apiRequestFlow
+import io.moura.test.challenge.ctw.data.source.network.model.DataResponse
 import io.moura.test.challenge.ctw.data.source.network.model.NetworkHeadLine
 import io.moura.test.challenge.ctw.data.utils.LocaleUtils
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +14,7 @@ class RetrofitNewsNetwork @Inject constructor(
     private val newsApi: NewsApi,
     private val localeUtils: LocaleUtils
 ) : NewsDataSource {
-    override fun loadHeadLines(): Flow<Response<List<NetworkHeadLine>>> = flow {
+    override fun loadHeadLines(): Flow<DataResponse<List<NetworkHeadLine>>> = flow {
         apiRequestFlow {
             newsApi.getHeadLinesFromCountry(
                 localeUtils.getUserLocale() ?: localeUtils.DEFAULT_LOCALE
@@ -21,15 +22,17 @@ class RetrofitNewsNetwork @Inject constructor(
         }.collect { apiResponse ->
             when (apiResponse) {
                 is ApiResponse.Failure -> emit(
-                    Response.Error(
+                    DataResponse.Error(
                         throwable = apiResponse.throwable,
                         code = apiResponse.code
                     )
                 )
 
                 is ApiResponse.Success -> {
-                    Response.Success(
-                        data = apiResponse.data
+                    emit(
+                        DataResponse.Success(
+                            data = apiResponse.data.articles
+                        )
                     )
                 }
             }

@@ -1,0 +1,81 @@
+package io.moura.test.challenge.ctw.data.source.network
+
+import app.cash.turbine.test
+import io.mockk.coEvery
+import io.mockk.mockk
+import io.mockk.unmockkAll
+import io.moura.test.challenge.ctw.data.source.network.api.ApiException
+import io.moura.test.challenge.ctw.data.source.network.api.NewsApi
+import io.moura.test.challenge.ctw.data.source.network.model.DataResponse
+import io.moura.test.challenge.ctw.data.source.network.model.NetworkHeadLineResponse
+import io.moura.test.challenge.ctw.data.utils.LocaleUtils
+import io.moura.test.challenge.ctw.factory.createRetrofitErrorResponse
+import io.moura.test.challenge.ctw.factory.generateRandomNetworkHeadLineResponse
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
+import retrofit2.Response
+
+class RetrofitNewsNetworkTest {
+
+    private lateinit var sut: NewsDataSource
+    private lateinit var newsApi: NewsApi
+
+    @Before
+    fun setUp() {
+        newsApi = mockk<NewsApi>()
+        sut = RetrofitNewsNetwork(
+            newsApi = newsApi,
+            localeUtils = LocaleUtils
+        )
+    }
+
+    @Test
+    fun `when api return success, check if flow was emitted with correct data`() = runTest {
+        val articleResponse = generateRandomNetworkHeadLineResponse(5)
+        coEvery { newsApi.getHeadLinesFromCountry(any()) } returns Response.success(articleResponse)
+
+        sut.loadHeadLines().test {
+            val response = awaitItem() as DataResponse.Success
+            response.data.forEach { responseArticle ->
+                articleResponse.articles.first { it.description == responseArticle.description }
+                    .let { actual ->
+                        assertEquals(responseArticle.author, actual.author)
+                        assertEquals(responseArticle.content, actual.content)
+                        assertEquals(responseArticle.description, actual.description)
+                        assertEquals(responseArticle.publishedAt, actual.publishedAt)
+                        assertEquals(responseArticle.source?.id, actual.source?.id)
+                        assertEquals(responseArticle.source?.name, actual.source?.name)
+                        assertEquals(responseArticle.title, actual.title)
+                        assertEquals(responseArticle.url, actual.url)
+                        assertEquals(responseArticle.urlToImage, actual.urlToImage)
+                    }
+            }
+            awaitComplete()
+            ensureAllEventsConsumed()
+        }
+    }
+
+    @Test
+    fun `when api returns error, check if exception`() = runTest {
+        val code = 404
+        val errorMessage = "Not Found"
+        val errorResponse = createRetrofitErrorResponse<NetworkHeadLineResponse>(code, errorMessage)
+        coEvery { newsApi.getHeadLinesFromCountry(any()) } returns errorResponse
+
+        sut.loadHeadLines().test {
+            val response = awaitItem() as DataResponse.Error
+            assertEquals(response.code, code)
+            assert(response.throwable is ApiException)
+
+            awaitComplete()
+            ensureAllEventsConsumed()
+        }
+    }
+
+    @Before
+    fun tearDown() {
+        unmockkAll()
+    }
+}

@@ -9,7 +9,7 @@ data class NetworkHeadLine(
     @SerializedName("publishedAt")
     val publishedAt: String?,
     @SerializedName("source")
-    val source: Source?,
+    val source: NetworkSource?,
     val title: String?,
     val url: String?,
     val urlToImage: String,
