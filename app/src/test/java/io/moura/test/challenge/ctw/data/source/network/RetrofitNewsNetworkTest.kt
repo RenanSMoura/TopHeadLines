@@ -34,11 +34,19 @@ class RetrofitNewsNetworkTest {
     @Test
     fun `when api return success, check if flow was emitted with correct data`() = runTest {
         val articleResponse = generateRandomNetworkHeadLineResponse(5)
-        coEvery { newsApi.getHeadLinesFromCountry(any()) } returns Response.success(articleResponse)
+        val nextPage = 1
+        val pageSize = articleResponse.articles.size
+        coEvery {
+            newsApi.getHeadLinesFromCountry(
+                countryId = any(),
+                page = nextPage,
+                pageSize = pageSize
+            )
+        } returns Response.success(articleResponse)
 
-        sut.loadHeadLines().test {
+        sut.loadHeadLines(nextPage, pageSize).test {
             val response = awaitItem() as DataResponse.Success
-            response.data.forEach { responseArticle ->
+            response.data.articles.forEach { responseArticle ->
                 articleResponse.articles.first { it.description == responseArticle.description }
                     .let { actual ->
                         assertEquals(responseArticle.author, actual.author)
@@ -61,10 +69,18 @@ class RetrofitNewsNetworkTest {
     fun `when api returns error, check if exception`() = runTest {
         val code = 404
         val errorMessage = "Not Found"
+        val nextPage = 1
+        val pageSize = 5
         val errorResponse = createRetrofitErrorResponse<NetworkHeadLineResponse>(code, errorMessage)
-        coEvery { newsApi.getHeadLinesFromCountry(any()) } returns errorResponse
+        coEvery {
+            newsApi.getHeadLinesFromCountry(
+                countryId = any(),
+                pageSize = nextPage,
+                page = pageSize
+            )
+        } returns errorResponse
 
-        sut.loadHeadLines().test {
+        sut.loadHeadLines(nextPage, pageSize).test {
             val response = awaitItem() as DataResponse.Error
             assertEquals(response.code, code)
             assert(response.throwable is ApiException)

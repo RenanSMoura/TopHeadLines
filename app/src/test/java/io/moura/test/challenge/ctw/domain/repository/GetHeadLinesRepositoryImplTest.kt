@@ -30,8 +30,9 @@ class GetHeadLinesRepositoryImplTest {
     @Test
     fun `When fetch data from data source, should return a valida data`() = runTest {
         val networkData = generateRandomNetworkHeadLineResponse(5)
-        coEvery { newsDataSource.loadHeadLines() } returns flow {
-            emit(DataResponse.Success(networkData.articles))
+        val nextPage = 1
+        coEvery { newsDataSource.loadHeadLines(nextPage) } returns flow {
+            emit(DataResponse.Success(networkData))
         }
 
         sut.getHeadLines(nextPage).test {
@@ -57,9 +58,10 @@ class GetHeadLinesRepositoryImplTest {
     @Test
     fun `When fetch data from data source, ensure that headlines are organized by date asc`() =
         runTest {
+            val nextPage = 1
             val networkData = generateRandomNetworkHeadLineResponse(5)
-            coEvery { newsDataSource.loadHeadLines() } returns flow {
-                emit(DataResponse.Success(networkData.articles))
+            coEvery { newsDataSource.loadHeadLines(nextPage) } returns flow {
+                emit(DataResponse.Success(networkData))
             }
 
             sut.getHeadLines(nextPage).test {
@@ -74,7 +76,8 @@ class GetHeadLinesRepositoryImplTest {
     fun `when fetch data and an error happen, should return an generic exception`() = runTest {
         val error = Exception("error")
         val code = 404
-        coEvery { newsDataSource.loadHeadLines() } returns flow {
+        val nextPage = 1
+        coEvery { newsDataSource.loadHeadLines(nextPage) } returns flow {
             emit(
                 DataResponse.Error(
                     throwable = error,
@@ -94,8 +97,9 @@ class GetHeadLinesRepositoryImplTest {
     @Test
     fun `when fetch data throws a exception, catch block should be called and handle the exception`() =
         runTest {
+            val nextPage = 1
             val error = Exception("error")
-            coEvery { newsDataSource.loadHeadLines() } throws error
+            coEvery { newsDataSource.loadHeadLines(nextPage) } throws error
 
             sut.getHeadLines(nextPage).test {
                 val response = awaitItem()
