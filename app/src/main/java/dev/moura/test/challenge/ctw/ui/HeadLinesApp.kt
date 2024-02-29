@@ -48,7 +48,7 @@ fun HeadLinesApp(
                 ),
                 title = {
                     Text(
-                        BuildConfig.SOURCE_TYPE.toUpperCase(Locale.getDefault())
+                        BuildConfig.SOURCE_TYPE.uppercase(Locale.getDefault())
                     )
                 },
                 navigationIcon = {

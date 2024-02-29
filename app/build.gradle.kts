@@ -10,8 +10,6 @@ fun getPropertiesFile(path: String): Properties {
     return properties
 }
 
-
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -33,13 +31,17 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["hostName"] = "dev.moura.test.challenge.ctw"
+
         vectorDrawables {
             useSupportLibrary = true
         }
     }
 
     buildTypes {
-        debug {
+
+        getByName("debug") {
             isMinifyEnabled = false
 
             proguardFiles(
@@ -51,7 +53,7 @@ android {
                 buildConfigField("String", key as String, value as String)
             }
         }
-        release {
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -63,6 +65,21 @@ android {
             }
         }
     }
+    flavorDimensions += "version"
+    productFlavors {
+        create("cnn") {
+            dimension = "version"
+            versionNameSuffix = "-cnn"
+            buildConfigField("String", "SOURCE_TYPE", "\"${name}\"")
+        }
+        create("cbs-news") {
+            dimension = "version"
+            versionNameSuffix = "-cbs"
+            buildConfigField("String", "SOURCE_TYPE", "\"${name}\"")
+        }
+    }
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -77,12 +94,15 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+
     packaging {
         resources {
             excludes.add("META-INF/*")
             excludes.add("META-INF/gradle/incremental.annotation.processors")
         }
     }
+
+
 }
 
 detekt {
