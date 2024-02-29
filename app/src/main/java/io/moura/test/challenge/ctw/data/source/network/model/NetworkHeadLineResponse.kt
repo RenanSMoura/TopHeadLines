@@ -4,6 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class NetworkHeadLineResponse(
     @SerializedName("totalResults")
-    val totalResults : Int,
+    val totalResults: Int,
     val articles: List<NetworkHeadLine>
 )

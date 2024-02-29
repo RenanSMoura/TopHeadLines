@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 data class HeadLinesUiState(
     val headLines: List<HeadLine> = mutableListOf(),
     val uiStateLoading: UiStateLoading = UiStateLoading.Idle,
@@ -29,9 +28,7 @@ data class HeadLinesUiState(
         data object Idle : UiStateLoading
         data object Error : UiStateLoading
     }
-
 }
-
 
 @HiltViewModel
 class HeadLinesViewModel @Inject constructor(
@@ -75,7 +72,6 @@ class HeadLinesViewModel @Inject constructor(
     private fun loadHeadLines() = viewModelScope.launch(dispatcher) {
         paginator.loadNextItem()
     }
-
 
     private fun updateHeadLines(headLines: List<HeadLine>, newKey: Int) {
         _uiState.value = _uiState.value.copy(

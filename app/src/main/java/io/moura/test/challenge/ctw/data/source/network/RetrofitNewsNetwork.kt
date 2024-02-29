@@ -4,7 +4,6 @@ import io.moura.test.challenge.ctw.data.source.network.api.ApiResponse
 import io.moura.test.challenge.ctw.data.source.network.api.NewsApi
 import io.moura.test.challenge.ctw.data.source.network.api.apiRequestFlow
 import io.moura.test.challenge.ctw.data.source.network.model.DataResponse
-import io.moura.test.challenge.ctw.data.source.network.model.NetworkHeadLine
 import io.moura.test.challenge.ctw.data.source.network.model.NetworkHeadLineResponse
 import io.moura.test.challenge.ctw.data.utils.LocaleUtils
 import kotlinx.coroutines.flow.Flow
