@@ -8,7 +8,6 @@ import io.moura.test.challenge.ctw.data.source.network.model.DataResponse
 import io.moura.test.challenge.ctw.data.source.network.model.toDate
 import io.moura.test.challenge.ctw.domain.exceptions.ExceptionMapper
 import io.moura.test.challenge.ctw.domain.exceptions.ProjectExceptions
-import io.moura.test.challenge.ctw.domain.model.HeadLine
 import io.moura.test.challenge.ctw.factory.generateRandomNetworkHeadLineResponse
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
@@ -19,7 +18,7 @@ import org.junit.Test
 
 class GetHeadLinesRepositoryImplTest {
 
-    private lateinit var sut: GetHeadLinesRepository<List<HeadLine>>
+    private lateinit var sut: GetHeadLinesRepository
     private lateinit var newsDataSource: NewsDataSource
 
     @Before
@@ -35,7 +34,7 @@ class GetHeadLinesRepositoryImplTest {
             emit(DataResponse.Success(networkData.articles))
         }
 
-        sut.getHeadLines().test {
+        sut.getHeadLines(nextPage).test {
             val response = awaitItem()
             response.data?.forEach { headLine ->
                 networkData.articles.first { it.content == headLine.content }.let { actual ->
@@ -63,7 +62,7 @@ class GetHeadLinesRepositoryImplTest {
                 emit(DataResponse.Success(networkData.articles))
             }
 
-            sut.getHeadLines().test {
+            sut.getHeadLines(nextPage).test {
                 val response = awaitItem()
                 val dates = response.data?.mapNotNull { it.publishedAt } ?: emptyList()
                 assertTrue(dates.zipWithNext { a, b -> a <= b }.all { it })
@@ -84,7 +83,7 @@ class GetHeadLinesRepositoryImplTest {
             )
         }
 
-        sut.getHeadLines().test {
+        sut.getHeadLines(nextPage).test {
             val response = awaitItem()
             assertEquals(response.exception, ExceptionMapper.mapException(error, code))
             assertTrue(response.exception is ProjectExceptions.GenericError)
@@ -98,7 +97,7 @@ class GetHeadLinesRepositoryImplTest {
             val error = Exception("error")
             coEvery { newsDataSource.loadHeadLines() } throws error
 
-            sut.getHeadLines().test {
+            sut.getHeadLines(nextPage).test {
                 val response = awaitItem()
                 assertEquals(response.exception, ExceptionMapper.mapException(error))
                 assertTrue(response.exception is ProjectExceptions.GenericError)

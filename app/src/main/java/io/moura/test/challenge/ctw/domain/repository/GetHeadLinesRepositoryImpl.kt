@@ -11,9 +11,9 @@ import javax.inject.Inject
 
 class GetHeadLinesRepositoryImpl @Inject constructor(
     private val newsDataSource: NewsDataSource
-) : GetHeadLinesRepository<List<HeadLine>> {
-    override suspend fun getHeadLines() = flow<DomainData<List<HeadLine>>> {
-        newsDataSource.loadHeadLines().collect { dataResponse ->
+) : GetHeadLinesRepository {
+    override suspend fun getHeadLines(nextPage: Int) = flow<DomainData<List<HeadLine>>> {
+        newsDataSource.loadHeadLines(nextPage).collect { dataResponse ->
             when (dataResponse) {
                 is DataResponse.Error -> {
                     emit(
@@ -31,7 +31,7 @@ class GetHeadLinesRepositoryImpl @Inject constructor(
                 is DataResponse.Success -> {
                     emit(
                         DomainData(
-                            data = dataResponse.data.map {
+                            data = dataResponse.data.articles.map {
                                 it.toModel()
                             }.sortedBy { it.publishedAt },
                             exception = null
