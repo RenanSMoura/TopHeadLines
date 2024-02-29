@@ -3,18 +3,27 @@ package io.moura.test.challenge.ctw.factory
 import io.moura.test.challenge.ctw.data.source.network.model.NetworkHeadLine
 import io.moura.test.challenge.ctw.data.source.network.model.NetworkHeadLineResponse
 import io.moura.test.challenge.ctw.data.source.network.model.NetworkSource
+import io.moura.test.challenge.ctw.domain.model.HeadLine
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import java.util.UUID
 
+fun generateRandomHeadLines(numArticles: Int): List<HeadLine> {
+    val articles = mutableListOf<HeadLine>()
+    repeat(numArticles) {
+        articles.add(generateRandomNetworkHeadLine().toModel())
+    }
+    return articles
+}
+
 fun generateRandomNetworkHeadLineResponse(numArticles: Int): NetworkHeadLineResponse {
     val articles = mutableListOf<NetworkHeadLine>()
     repeat(numArticles) {
         articles.add(generateRandomNetworkHeadLine())
     }
-    return NetworkHeadLineResponse(articles)
+    return NetworkHeadLineResponse(numArticles, articles)
 }
 
 fun generateRandomNetworkHeadLine() = NetworkHeadLine(

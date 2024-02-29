@@ -13,7 +13,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 400
             ),
-            ProjectExceptions.BadRequest
+            BaseExceptions.BadRequest
         )
     }
 
@@ -24,18 +24,29 @@ class ExceptionMapperTest {
                 ApiException(""),
                 401
             ),
-            ProjectExceptions.Unauthorized
+            BaseExceptions.Unauthorized
         )
     }
 
     @Test
-    fun `when code is 404, should return Forbidden error`() {
+    fun `when code is 403, should return Forbidden error`() {
         assertEquals(
             ExceptionMapper.mapException(
                 ApiException(""),
                 403
             ),
-            ProjectExceptions.Forbidden
+            BaseExceptions.Forbidden
+        )
+    }
+
+    @Test
+    fun `when code is 404, should return NotFound error`() {
+        assertEquals(
+            ExceptionMapper.mapException(
+                ApiException(""),
+                404
+            ),
+            BaseExceptions.NotFound
         )
     }
 
@@ -46,7 +57,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 500
             ),
-            ProjectExceptions.InternalError
+            BaseExceptions.InternalError
         )
     }
 
@@ -57,7 +68,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 504
             ),
-            ProjectExceptions.TimeOut
+            BaseExceptions.TimeOut
         )
     }
 
@@ -68,7 +79,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 null
             ),
-            ProjectExceptions.GenericError
+            BaseExceptions.GenericError
         )
     }
 
@@ -79,7 +90,7 @@ class ExceptionMapperTest {
                 null,
                 400
             ),
-            ProjectExceptions.GenericError
+            BaseExceptions.GenericError
         )
     }
 }
