@@ -1,20 +1,32 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
+import java.io.FileInputStream
+import java.util.Properties
+
+
+fun getPropertiesFile(path: String): Properties {
+    val properties = Properties()
+    properties.load(FileInputStream(file(path)))
+    return properties
+}
+
+
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.detekt)
     alias(libs.plugins.hilt.android)
-    kotlin("kapt")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
-    namespace = "io.moura.test.challenge.ctw"
+    namespace = "dev.moura.test.challenge.ctw"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "io.moura.test.challenge.ctw"
+        applicationId = "dev.moura.test.challenge.ctw"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -27,12 +39,28 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+
+            getPropertiesFile("./config/development.properties").forEach { key, value ->
+                buildConfigField("String", key as String, value as String)
+            }
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            getPropertiesFile("./config/production.properties").forEach { key, value ->
+                buildConfigField("String", key as String, value as String)
+            }
         }
     }
     compileOptions {
@@ -53,12 +81,6 @@ android {
         resources {
             excludes.add("META-INF/*")
             excludes.add("META-INF/gradle/incremental.annotation.processors")
-        }
-    }
-    sourceSets {
-        named("test") {
-            java.srcDirs("src/debug/java")
-            resources.srcDirs("src/debug/resources")
         }
     }
 }
@@ -111,7 +133,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.jakewharton.timber)
-
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
     testImplementation(libs.junit)
     testImplementation(libs.androidx.junit)
     testImplementation(libs.mockk)
@@ -126,4 +149,7 @@ dependencies {
     androidTestImplementation(libs.mockk.android)
 
     detektPlugins(libs.detekt.formatting)
+
+    kapt(libs.hilt.android.compiler)
+    kapt(libs.hilt.compiler)
 }

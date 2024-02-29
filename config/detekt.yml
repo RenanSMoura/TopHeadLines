@@ -19,10 +19,13 @@ style:
   MagicNumber:
     active: false
   UnusedPrivateMember:
-    active: true
+    active: false
     ignoreAnnotated: [ 'Preview' ]
   ReturnCount:
     active: false
+  UnusedParameter:
+    active: false
+
 
 naming:
   FunctionNaming:
