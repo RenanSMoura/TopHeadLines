@@ -6,8 +6,8 @@ import io.mockk.mockk
 import io.moura.test.challenge.ctw.data.source.network.NewsDataSource
 import io.moura.test.challenge.ctw.data.source.network.model.DataResponse
 import io.moura.test.challenge.ctw.data.source.network.model.toDate
-import io.moura.test.challenge.ctw.domain.exceptions.ExceptionMapper
 import io.moura.test.challenge.ctw.domain.exceptions.BaseExceptions
+import io.moura.test.challenge.ctw.domain.exceptions.ExceptionMapper
 import io.moura.test.challenge.ctw.factory.generateRandomNetworkHeadLineResponse
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest

@@ -49,7 +49,6 @@ class HeadLinesViewModel @Inject constructor(
                     uiStateLoading = loadState
                 )
             }
-
         },
         getNextKey = {
             _uiState.value.page + 1
@@ -65,11 +64,9 @@ class HeadLinesViewModel @Inject constructor(
         }
     )
 
-
     init {
         loadHeadLines()
     }
-
 
     private fun loadHeadLines() = viewModelScope.launch(dispatcher) {
         paginator.loadNextItem()
@@ -85,7 +82,6 @@ class HeadLinesViewModel @Inject constructor(
                 page = newKey
             )
         }
-
     }
 
     private fun handleWithException(exception: Throwable?) {

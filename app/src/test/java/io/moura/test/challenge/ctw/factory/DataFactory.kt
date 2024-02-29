@@ -10,15 +10,13 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 import java.util.UUID
 
-
-fun generateRandomHeadLines(numArticles: Int) : List<HeadLine>{
+fun generateRandomHeadLines(numArticles: Int): List<HeadLine> {
     val articles = mutableListOf<HeadLine>()
     repeat(numArticles) {
         articles.add(generateRandomNetworkHeadLine().toModel())
     }
     return articles
 }
-
 
 fun generateRandomNetworkHeadLineResponse(numArticles: Int): NetworkHeadLineResponse {
     val articles = mutableListOf<NetworkHeadLine>()

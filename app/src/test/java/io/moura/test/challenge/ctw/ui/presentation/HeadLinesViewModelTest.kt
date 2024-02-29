@@ -37,12 +37,12 @@ class HeadLinesViewModelTest {
         )
     }
 
-
     @Test
     fun `before emit first item, check if uiState is loading`() = runTest {
         sut.uiState.test {
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Loading
                 )
             )
@@ -56,7 +56,8 @@ class HeadLinesViewModelTest {
         val nextPage = 1
         sut.uiState.test {
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Loading
                 )
             )
@@ -64,7 +65,8 @@ class HeadLinesViewModelTest {
             repository.getHeadLines(nextPage)
 
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Idle,
                     headLines = headLines,
                     page = nextPage
@@ -80,16 +82,17 @@ class HeadLinesViewModelTest {
         val nextPage = 1
         sut.uiState.test {
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Loading
                 )
             )
             repository.emit(DomainData(headLines))
             repository.getHeadLines(nextPage)
 
-
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Idle,
                     headLines = headLines,
                     page = nextPage
@@ -103,14 +106,16 @@ class HeadLinesViewModelTest {
             val thirdEvent = awaitItem()
 
             assertEquals(
-                thirdEvent, HeadLinesUiState().copy(
+                thirdEvent,
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Idle,
                     headLines = headLines + newHeadLines,
                     page = nextPage + 1
                 )
             )
             assertEquals(
-                thirdEvent.headLines.size, (headLines + newHeadLines).size
+                thirdEvent.headLines.size,
+                (headLines + newHeadLines).size
             )
 
             ensureAllEventsConsumed()
@@ -123,7 +128,8 @@ class HeadLinesViewModelTest {
         val nextPage = 1
         sut.uiState.test {
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Loading
                 )
             )
@@ -131,7 +137,8 @@ class HeadLinesViewModelTest {
             repository.getHeadLines(nextPage)
 
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Idle,
                     headLines = headLines,
                     page = nextPage
@@ -141,7 +148,8 @@ class HeadLinesViewModelTest {
             repository.getHeadLines(nextPage + 1)
 
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Idle,
                     headLines = headLines,
                     page = nextPage + 1,
@@ -158,7 +166,8 @@ class HeadLinesViewModelTest {
         val nextPage = 1
         sut.uiState.test {
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Loading
                 )
             )
@@ -166,7 +175,8 @@ class HeadLinesViewModelTest {
             repository.getHeadLines(nextPage)
 
             assertEquals(
-                awaitItem(), HeadLinesUiState().copy(
+                awaitItem(),
+                HeadLinesUiState().copy(
                     uiStateLoading = HeadLinesUiState.UiStateLoading.Error,
                     headLines = emptyList(),
                     errorMessage = BaseExceptions.Unauthorized.message
