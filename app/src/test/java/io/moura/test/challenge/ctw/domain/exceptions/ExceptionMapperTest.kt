@@ -13,7 +13,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 400
             ),
-            ProjectExceptions.BadRequest
+            BaseExceptions.BadRequest
         )
     }
 
@@ -24,7 +24,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 401
             ),
-            ProjectExceptions.Unauthorized
+            BaseExceptions.Unauthorized
         )
     }
 
@@ -35,7 +35,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 403
             ),
-            ProjectExceptions.Forbidden
+            BaseExceptions.Forbidden
         )
     }
 
@@ -46,7 +46,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 404
             ),
-            ProjectExceptions.NotFound
+            BaseExceptions.NotFound
         )
     }
 
@@ -57,7 +57,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 500
             ),
-            ProjectExceptions.InternalError
+            BaseExceptions.InternalError
         )
     }
 
@@ -68,7 +68,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 504
             ),
-            ProjectExceptions.TimeOut
+            BaseExceptions.TimeOut
         )
     }
 
@@ -79,7 +79,7 @@ class ExceptionMapperTest {
                 ApiException(""),
                 null
             ),
-            ProjectExceptions.GenericError
+            BaseExceptions.GenericError
         )
     }
 
@@ -90,7 +90,7 @@ class ExceptionMapperTest {
                 null,
                 400
             ),
-            ProjectExceptions.GenericError
+            BaseExceptions.GenericError
         )
     }
 }

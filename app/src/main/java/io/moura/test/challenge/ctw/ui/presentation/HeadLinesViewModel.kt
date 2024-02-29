@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,20 +41,15 @@ class HeadLinesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HeadLinesUiState())
     val uiState: StateFlow<HeadLinesUiState> = _uiState.asStateFlow()
 
-    init {
-        loadHeadLines()
-    }
-
     private val paginator = DefaultPaginator(
         initialKey = _uiState.value.page,
-        onLoadUpdated = {
-            _uiState.value = _uiState.value.copy(
-                uiStateLoading = if (it) {
-                    UiStateLoading.Loading
-                } else {
-                    UiStateLoading.Idle
-                }
-            )
+        onLoadUpdated = { loadState ->
+            _uiState.update {
+                it.copy(
+                    uiStateLoading = loadState
+                )
+            }
+
         },
         getNextKey = {
             _uiState.value.page + 1
@@ -69,25 +65,35 @@ class HeadLinesViewModel @Inject constructor(
         }
     )
 
+
+    init {
+        loadHeadLines()
+    }
+
+
     private fun loadHeadLines() = viewModelScope.launch(dispatcher) {
         paginator.loadNextItem()
     }
 
     private fun updateHeadLines(headLines: List<HeadLine>, newKey: Int) {
-        _uiState.value = _uiState.value.copy(
-            headLines = _uiState.value.headLines + headLines,
-            uiStateLoading = UiStateLoading.Idle,
-            errorMessage = null,
-            endReach = headLines.isEmpty(),
-            page = newKey
-        )
+        _uiState.update {
+            it.copy(
+                headLines = _uiState.value.headLines + headLines,
+                uiStateLoading = UiStateLoading.Idle,
+                errorMessage = null,
+                endReach = headLines.isEmpty(),
+                page = newKey
+            )
+        }
+
     }
 
     private fun handleWithException(exception: Throwable?) {
-        _uiState.value = _uiState.value.copy(
-            headLines = mutableListOf(),
-            uiStateLoading = UiStateLoading.Error,
-            errorMessage = exception?.message
-        )
+        _uiState.update {
+            it.copy(
+                uiStateLoading = UiStateLoading.Error,
+                errorMessage = exception?.message
+            )
+        }
     }
 }

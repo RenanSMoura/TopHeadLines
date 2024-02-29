@@ -75,8 +75,8 @@ class RetrofitNewsNetworkTest {
         coEvery {
             newsApi.getHeadLinesFromCountry(
                 countryId = any(),
-                pageSize = nextPage,
-                page = pageSize
+                pageSize = pageSize,
+                page = nextPage
             )
         } returns errorResponse
 

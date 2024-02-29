@@ -9,7 +9,6 @@ class FakeGetHeadLinesRepository : GetHeadLinesRepository {
     private val headLinesFlow = MutableSharedFlow<DomainData<List<HeadLine>>>()
 
     override suspend fun getHeadLines(nextPage: Int) = headLinesFlow
-
-
     suspend fun emit(response: DomainData<List<HeadLine>>) = headLinesFlow.emit(response)
+
 }
